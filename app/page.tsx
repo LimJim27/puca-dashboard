@@ -130,7 +130,7 @@ export default function Dashboard() {
                   <YAxis tick={{ fill: "#9ca3af", fontSize: 12 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: "8px" }}
-                    formatter={(v: number) => CAD(v)}
+                    formatter={(v: any) => CAD(v as number)}
                   />
                   <Bar dataKey="total" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -148,7 +148,7 @@ export default function Dashboard() {
                         <Cell key={i} fill={COLORS[i]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(v: number) => CAD(v)} contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: "8px" }} />
+                    <Tooltip formatter={(v: any) => CAD(v as number)} contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: "8px" }} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="space-y-3 flex-1">
@@ -227,7 +227,7 @@ export default function Dashboard() {
                   <YAxis tick={{ fill: "#9ca3af", fontSize: 11 }} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: "8px" }}
-                    formatter={(v: number) => CAD(v)}
+                    formatter={(v: any) => CAD(v as number)}
                   />
                   <Legend wrapperStyle={{ fontSize: "11px" }} />
                   {["Eating Out", "Pints/Bar", "Groceries", "Travel", "Transport", "Other"].map((cat) => (

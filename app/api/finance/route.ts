@@ -93,14 +93,21 @@ export async function GET() {
     const scotiaTotal = currentTxns.filter((t) => t.account === "Scotiabank").reduce((a, t) => a + t.amount, 0);
     const amexTotal = currentTxns.filter((t) => t.account === "Amex").reduce((a, t) => a + t.amount, 0);
 
-    // Savings calc
-    const income = transactions.filter((t) => t.type === "Income").reduce((a, t) => a + t.amount, 0);
-    const totalExpenses = transactions.filter((t) => t.type === "Expense" && t.category !== "Work Expense").reduce((a, t) => a + t.amount, 0);
-    const netSaved = income - totalExpenses;
-    const currentBalance = 20000 + netSaved;
+    // Savings calc — use actual Scotiabank balance + savings goal
+    // Current balance is read from the Forecast sheet input cell (B2)
+    // Fallback to known value if not available
+    let currentBalance = 16203; // Last known Scotiabank balance from statement
+    try {
+      const forecastRes = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: "Forecast!B2:B5",
+      });
+      const fVals = forecastRes.data.values || [];
+      if (fVals[0]?.[0]) currentBalance = parseFloat(String(fVals[0][0]).replace(/[$,]/g, "")) || currentBalance;
+    } catch {}
     const savingsGoal = 40000;
     const monthlySavingsTarget = 2200;
-    const monthsToGoal = Math.ceil((savingsGoal - currentBalance) / monthlySavingsTarget);
+    const monthsToGoal = Math.max(0, Math.ceil((savingsGoal - currentBalance) / monthlySavingsTarget));
     const projectedDate = new Date();
     projectedDate.setMonth(projectedDate.getMonth() + monthsToGoal);
 
